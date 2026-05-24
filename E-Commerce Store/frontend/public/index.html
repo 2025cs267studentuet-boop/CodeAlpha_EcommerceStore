@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopWave — Premium Store</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a href="#" class="logo" onclick="showPage('home')">
+      <span class="logo-wave">Shop</span><span class="logo-bold">Wave</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('products')">Shop</a>
+      <a href="#" onclick="showPage('orders')">My Orders</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="search-bar">
+        <input type="text" id="navSearch" placeholder="Search products…" oninput="handleNavSearch(this.value)"/>
+        <span class="search-icon">⌕</span>
+      </div>
+      <button class="cart-btn" onclick="toggleCart()">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <div class="auth-area" id="authArea">
+        <button class="btn-ghost" onclick="showAuthModal('login')">Login</button>
+        <button class="btn-primary" onclick="showAuthModal('register')">Sign Up</button>
+      </div>
+      <div class="user-area hidden" id="userArea">
+        <span class="user-name" id="userName"></span>
+        <button class="btn-ghost" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== PAGES ===== -->
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page active">
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-tag">New Season Collection</p>
+      <h1 class="hero-title">Discover <em>Premium</em><br/>Products Made<br/>for You</h1>
+      <p class="hero-sub">Curated selection of top-quality items across electronics, fashion, sports & home.</p>
+      <div class="hero-ctas">
+        <button class="btn-hero" onclick="showPage('products')">Shop Now</button>
+        <button class="btn-hero-ghost" onclick="scrollToFeatured()">View Featured →</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card hero-card-1">
+        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80" alt=""/>
+        <div class="hero-card-info"><span>Headphones</span><strong>$299</strong></div>
+      </div>
+      <div class="hero-card hero-card-2">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80" alt=""/>
+        <div class="hero-card-info"><span>Watch</span><strong>$199</strong></div>
+      </div>
+      <div class="hero-badge">🔥 Flash Sale<br/>Up to 30% OFF</div>
+    </div>
+  </section>
+
+  <!-- Category Quick Links -->
+  <section class="categories-section">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="categories-grid">
+      <div class="cat-card" onclick="filterByCategory('Electronics')">
+        <div class="cat-icon">💻</div>
+        <span>Electronics</span>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Fashion')">
+        <div class="cat-icon">👗</div>
+        <span>Fashion</span>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Sports')">
+        <div class="cat-icon">⚽</div>
+        <span>Sports</span>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Home')">
+        <div class="cat-icon">🏠</div>
+        <span>Home</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="featured-section" id="featuredSection">
+    <div class="section-header">
+      <h2 class="section-title">Featured Products</h2>
+      <button class="btn-link" onclick="showPage('products')">View All →</button>
+    </div>
+    <div class="products-grid" id="featuredGrid">
+      <div class="loading-spinner">Loading products…</div>
+    </div>
+  </section>
+
+  <!-- Banner -->
+  <section class="promo-banner">
+    <div class="promo-content">
+      <h3>Free Shipping on Orders Over $100</h3>
+      <p>Use code <strong>FREESHIP</strong> at checkout · 30-day returns · Secure payments</p>
+    </div>
+  </section>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div id="productsPage" class="page">
+  <div class="products-layout">
+    <!-- Sidebar Filters -->
+    <aside class="filters-sidebar">
+      <h3>Filters</h3>
+
+      <div class="filter-group">
+        <label>Category</label>
+        <div class="filter-options" id="categoryFilters">
+          <button class="filter-chip active" onclick="setCategoryFilter('All', this)">All</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Price Range</label>
+        <div class="price-inputs">
+          <input type="number" id="minPrice" placeholder="Min $" min="0"/>
+          <span>—</span>
+          <input type="number" id="maxPrice" placeholder="Max $" min="0"/>
+        </div>
+        <button class="btn-apply" onclick="applyPriceFilter()">Apply</button>
+      </div>
+
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select id="sortSelect" onchange="applySortFilter()">
+          <option value="">Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+
+      <button class="btn-reset" onclick="resetFilters()">Reset All Filters</button>
+    </aside>
+
+    <!-- Products Main -->
+    <main class="products-main">
+      <div class="products-header">
+        <h2 id="productsHeading">All Products</h2>
+        <span id="productCount" class="product-count"></span>
+      </div>
+      <div class="products-grid" id="productsGrid">
+        <div class="loading-spinner">Loading…</div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL PAGE -->
+<div id="detailPage" class="page">
+  <div class="detail-container" id="detailContainer">
+    <div class="loading-spinner">Loading…</div>
+  </div>
+</div>
+
+<!-- ORDERS PAGE -->
+<div id="ordersPage" class="page">
+  <div class="orders-container">
+    <h2>My Orders</h2>
+    <div id="ordersList">
+      <div class="loading-spinner">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT PAGE -->
+<div id="checkoutPage" class="page">
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+    <div class="checkout-layout">
+      <div class="checkout-form-wrap">
+        <div class="checkout-section">
+          <h3>📦 Shipping Address</h3>
+          <div class="form-grid">
+            <input type="text" id="shpName" placeholder="Full Name" required/>
+            <input type="text" id="shpPhone" placeholder="Phone Number"/>
+            <input type="text" id="shpAddress" placeholder="Street Address" class="full-width" required/>
+            <input type="text" id="shpCity" placeholder="City" required/>
+            <input type="text" id="shpState" placeholder="State / Province"/>
+            <input type="text" id="shpZip" placeholder="ZIP / Postal Code"/>
+            <input type="text" id="shpCountry" placeholder="Country" value="Pakistan"/>
+          </div>
+        </div>
+        <div class="checkout-section">
+          <h3>💳 Payment Method</h3>
+          <div class="payment-options">
+            <label class="pay-opt">
+              <input type="radio" name="payMethod" value="card" checked/>
+              <span>Credit / Debit Card</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payMethod" value="cod"/>
+              <span>Cash on Delivery</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payMethod" value="easypaisa"/>
+              <span>EasyPaisa / JazzCash</span>
+            </label>
+          </div>
+          <div id="cardFields">
+            <div class="form-grid">
+              <input type="text" placeholder="Card Number" class="full-width" maxlength="19"/>
+              <input type="text" placeholder="Cardholder Name" class="full-width"/>
+              <input type="text" placeholder="MM / YY"/>
+              <input type="text" placeholder="CVV" maxlength="4"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="checkout-summary">
+        <h3>Order Summary</h3>
+        <div id="checkoutItems"></div>
+        <div class="summary-totals" id="summaryTotals"></div>
+        <button class="btn-place-order" onclick="placeOrder()">Place Order</button>
+        <button class="btn-back" onclick="toggleCart()">← Edit Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button onclick="toggleCart()" class="close-btn">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="empty-cart">Your cart is empty.</p>
+  </div>
+  <div class="cart-footer" id="cartFooter"></div>
+</div>
+
+<!-- ===== AUTH MODAL ===== -->
+<div class="modal-overlay" id="authOverlay" onclick="closeAuthModal()"></div>
+<div class="modal" id="authModal">
+  <button class="close-btn modal-close" onclick="closeAuthModal()">✕</button>
+
+  <!-- Login -->
+  <div id="loginForm">
+    <h2 class="modal-title">Welcome Back</h2>
+    <p class="modal-sub">Log in to your ShopWave account</p>
+    <div class="form-stack">
+      <input type="email" id="loginEmail" placeholder="Email address"/>
+      <input type="password" id="loginPassword" placeholder="Password"/>
+      <div class="error-msg" id="loginError"></div>
+      <button class="btn-primary full" onclick="login()">Log In</button>
+    </div>
+    <p class="modal-switch">Don't have an account? <a href="#" onclick="switchAuthTab('register')">Sign Up</a></p>
+  </div>
+
+  <!-- Register -->
+  <div id="registerForm" class="hidden">
+    <h2 class="modal-title">Create Account</h2>
+    <p class="modal-sub">Join ShopWave today</p>
+    <div class="form-stack">
+      <input type="text" id="regName" placeholder="Full Name"/>
+      <input type="email" id="regEmail" placeholder="Email address"/>
+      <input type="password" id="regPassword" placeholder="Password (min 6 chars)"/>
+      <div class="error-msg" id="registerError"></div>
+      <button class="btn-primary full" onclick="register()">Create Account</button>
+    </div>
+    <p class="modal-switch">Already have an account? <a href="#" onclick="switchAuthTab('login')">Log In</a></p>
+  </div>
+</div>
+
+<!-- ===== SUCCESS MODAL ===== -->
+<div class="modal-overlay hidden" id="successOverlay"></div>
+<div class="modal success-modal hidden" id="successModal">
+  <div class="success-icon">🎉</div>
+  <h2>Order Placed!</h2>
+  <p id="successMsg"></p>
+  <button class="btn-primary full" onclick="closeSuccessModal()">Continue Shopping</button>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
