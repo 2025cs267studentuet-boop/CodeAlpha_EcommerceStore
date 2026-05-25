@@ -2,13 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Auth middleware
 function requireAuth(req, res, next) {
   if (!req.session.userId) return res.status(401).json({ error: 'Login required' });
   next();
 }
 
-// Place order
 router.post('/', requireAuth, (req, res) => {
   const { items, shippingAddress, paymentMethod } = req.body;
   if (!items || !items.length) return res.status(400).json({ error: 'No items in order' });
@@ -35,7 +33,6 @@ router.post('/', requireAuth, (req, res) => {
     createdAt: new Date()
   };
 
-  // Update stock
   items.forEach(item => {
     db.products.update({ _id: item.productId }, { $inc: { stock: -item.quantity } });
   });
@@ -46,14 +43,12 @@ router.post('/', requireAuth, (req, res) => {
   });
 });
 
-// Get user orders
 router.get('/my', requireAuth, (req, res) => {
   db.orders.find({ userId: req.session.userId }).sort({ createdAt: -1 }).exec((err, orders) => {
     res.json(orders);
   });
 });
 
-// Get single order
 router.get('/:id', requireAuth, (req, res) => {
   db.orders.findOne({ _id: req.params.id, userId: req.session.userId }, (err, order) => {
     if (!order) return res.status(404).json({ error: 'Order not found' });

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Get all products with optional filters
 router.get('/', (req, res) => {
   const { category, search, sort, minPrice, maxPrice } = req.query;
   let query = {};
@@ -17,7 +16,6 @@ router.get('/', (req, res) => {
   db.products.find(query, (err, products) => {
     if (err) return res.status(500).json({ error: 'DB error' });
 
-    // Search filter
     let filtered = products;
     if (search) {
       const s = search.toLowerCase();
@@ -28,7 +26,6 @@ router.get('/', (req, res) => {
       );
     }
 
-    // Sort
     if (sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
     else if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
     else if (sort === 'rating') filtered.sort((a, b) => b.rating - a.rating);
@@ -38,7 +35,6 @@ router.get('/', (req, res) => {
   });
 });
 
-// Get single product
 router.get('/:id', (req, res) => {
   db.products.findOne({ _id: req.params.id }, (err, product) => {
     if (!product) return res.status(404).json({ error: 'Product not found' });
@@ -46,7 +42,6 @@ router.get('/:id', (req, res) => {
   });
 });
 
-// Get categories
 router.get('/meta/categories', (req, res) => {
   db.products.find({}, { category: 1 }, (err, products) => {
     const cats = ['All', ...new Set(products.map(p => p.category))];

@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 
-// Register
 router.post('/register', (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password)
@@ -21,7 +20,6 @@ router.post('/register', (req, res) => {
   });
 });
 
-// Login
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -38,13 +36,11 @@ router.post('/login', (req, res) => {
   });
 });
 
-// Logout
 router.post('/logout', (req, res) => {
   req.session.destroy();
   res.json({ success: true });
 });
 
-// Get current user
 router.get('/me', (req, res) => {
   if (!req.session.userId)
     return res.status(401).json({ error: 'Not authenticated' });

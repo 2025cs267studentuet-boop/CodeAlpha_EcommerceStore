@@ -1,7 +1,3 @@
-/* ==============================
-   SHOPWAVE — Frontend Application
-   ============================== */
-
 const API = '/api';
 let cart = JSON.parse(localStorage.getItem('swCart') || '[]');
 let currentUser = null;
@@ -9,7 +5,6 @@ let currentProducts = [];
 let activeCategory = 'All';
 let detailQty = 1;
 
-// ====== INIT ======
 document.addEventListener('DOMContentLoaded', async () => {
   renderCart();
   await checkAuth();
@@ -18,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadProducts();
 });
 
-// ====== NAVIGATION ======
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const map = { home: 'homePage', products: 'productsPage', orders: 'ordersPage', checkout: 'checkoutPage' };
@@ -32,7 +26,6 @@ function scrollToFeatured() {
   document.getElementById('featuredSection').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ====== AUTH ======
 async function checkAuth() {
   try {
     const res = await fetch(`${API}/auth/me`, { credentials: 'include' });
@@ -135,7 +128,6 @@ async function logout() {
   showToast('Logged out successfully.', 'info');
 }
 
-// ====== PRODUCTS ======
 async function loadFeatured() {
   try {
     const res = await fetch(`${API}/products`);

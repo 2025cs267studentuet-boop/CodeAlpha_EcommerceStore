@@ -11,10 +11,8 @@ const db = {
   orders: new Datastore({ filename: path.join(dbPath, 'orders.db'), autoload: true }),
 };
 
-// Create indexes
 db.users.ensureIndex({ fieldName: 'email', unique: true });
 
-// Seed products if empty
 db.products.count({}, (err, count) => {
   if (count === 0) {
     const products = [
@@ -169,7 +167,6 @@ db.products.count({}, (err, count) => {
   }
 });
 
-// Seed admin user
 db.users.count({}, (err, count) => {
   if (count === 0) {
     const hash = bcrypt.hashSync('admin123', 10);
