@@ -1,1 +1,2 @@
+{"name":"Admin User","email":"admin@shop.com","password":"$2b$10$12VPI9ar/YVabLHho1AAo.eDbBVUDpm3/9JlUmkgcJTIteS1rBSf6","role":"admin","createdAt":{"$$date":1716825600000},"_id":"admin001"}
 {"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}
